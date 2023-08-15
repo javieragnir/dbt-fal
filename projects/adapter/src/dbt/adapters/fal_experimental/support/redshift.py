@@ -8,7 +8,10 @@ import awswrangler as wr
 from dbt.adapters.base import BaseRelation
 from dbt.adapters.base.connections import AdapterResponse
 
-from dbt.adapters.fal_experimental.adapter_support import new_connection, drop_relation_if_it_exists
+from dbt.adapters.fal_experimental.adapter_support import (
+    new_connection,
+    drop_relation_if_it_exists,
+)
 
 from dbt.adapters.redshift import RedshiftAdapter
 
@@ -30,7 +33,6 @@ def write_df_to_relation(
     data: pd.DataFrame,
     relation: BaseRelation,
 ) -> AdapterResponse:
-
     assert adapter.type() == "redshift"
 
     with new_connection(adapter, "fal-redshift:write_df_to_relation") as connection:
@@ -46,6 +48,7 @@ def write_df_to_relation(
             table=temp_relation.identifier,
             schema=temp_relation.schema,
             index=False,
+            varchar_lengths_default=16384,
         )
 
         adapter.cache.add(temp_relation)
